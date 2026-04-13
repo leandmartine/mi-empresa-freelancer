@@ -3,6 +3,8 @@ import { Geist } from 'next/font/google'
 import './globals.css'
 import { QueryProvider } from '@/providers/QueryProvider'
 import { AuthProvider } from '@/providers/AuthProvider'
+import { CelebrationProvider } from '@/components/shared/Celebrations'
+import { EasterEgg } from '@/components/shared/EasterEgg'
 import { Toaster } from 'sonner'
 
 const geistSans = Geist({
@@ -43,6 +45,8 @@ export default function RootLayout({
         <AuthProvider>
           <QueryProvider>
             {children}
+            <CelebrationProvider />
+            <EasterEgg />
             <Toaster
               position="top-center"
               toastOptions={{

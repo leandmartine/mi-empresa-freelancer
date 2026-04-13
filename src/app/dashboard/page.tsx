@@ -3,12 +3,10 @@ import { QuickAddHours } from '@/components/dashboard/QuickAddHours'
 import { TodaySummary } from '@/components/dashboard/TodaySummary'
 import { DailyNote } from '@/components/dashboard/DailyNote'
 import { RecentActivity } from '@/components/dashboard/RecentActivity'
-import { EasterEgg } from '@/components/shared/EasterEgg'
 
 export default function DashboardPage() {
   return (
     <AppLayout>
-      <EasterEgg />
       <div className="max-w-2xl mx-auto space-y-5">
         {/* Resumen del día */}
         <TodaySummary />

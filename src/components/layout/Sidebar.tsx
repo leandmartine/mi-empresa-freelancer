@@ -36,8 +36,11 @@ export function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-pink-50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl flex items-center justify-center shadow-md shadow-pink-200">
-            <Sparkles className="w-5 h-5 text-white" />
+          <div
+            data-easter-egg
+            className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl flex items-center justify-center shadow-md shadow-pink-200 cursor-pointer select-none"
+          >
+            <Sparkles className="w-5 h-5 text-white pointer-events-none" />
           </div>
           <div>
             <h1 className="font-bold text-pink-900 text-sm leading-tight">Mi Empresa</h1>

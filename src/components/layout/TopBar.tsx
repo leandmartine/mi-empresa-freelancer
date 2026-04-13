@@ -21,16 +21,23 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-40 md:hidden bg-white/80 backdrop-blur-md border-b border-pink-100">
-      <div className="px-4 py-3">
-        <motion.h1
-          key={title}
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-lg font-bold text-pink-900"
-        >
-          {title}
-        </motion.h1>
-        <p className="text-xs text-pink-400 capitalize">{today}</p>
+      <div className="px-4 py-3 flex items-center gap-3">
+        <span
+          data-easter-egg
+          className="text-xl select-none cursor-pointer"
+          title=""
+        >🌸</span>
+        <div>
+          <motion.h1
+            key={title}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-lg font-bold text-pink-900 leading-tight"
+          >
+            {title}
+          </motion.h1>
+          <p className="text-xs text-pink-400 capitalize">{today}</p>
+        </div>
       </div>
     </header>
   )
