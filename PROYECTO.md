@@ -1,7 +1,7 @@
-# 🌸 Mi Empresa — Sistema de Gestión Freelancer
+# 🌸 Mi Empresa — Sistema de Gestión Independiente
 
 ## ¿Qué es esto?
-Panel de autogestión para una freelancer independiente.
+Panel de autogestión para una trabajadora independiente.
 Permite registrar horas por empresa/proyecto, ver métricas mensuales,
 escribir notas diarias y sincronizar todo automáticamente con Google Sheets.
 

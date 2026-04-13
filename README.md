@@ -1,6 +1,6 @@
-# 🌸 Mi Empresa — Panel de gestión para freelancers
+# 🌸 Mi Empresa — Panel de gestión para trabajadoras independientes
 
-Sistema de autogestión de horas y proyectos diseñado para freelancers independientes. Permite registrar el tiempo trabajado por empresa y proyecto, ver métricas mensuales y mantener un respaldo automático en Google Sheets.
+Sistema de autogestión de horas y proyectos diseñado para trabajadoras independientes. Permite registrar el tiempo trabajado por empresa y proyecto, ver métricas mensuales y mantener un respaldo automático en Google Sheets.
 
 > Diseñado con foco total en UX mobile-first: simple, rápido y bonito.
 
@@ -83,8 +83,8 @@ Si trabajás de forma independiente para varios clientes y necesitás llevar un 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/leandmartine/mi-empresa-freelancer.git
-cd mi-empresa-freelancer
+git clone https://github.com/leandmartine/mi-empresa-independiente.git
+cd mi-empresa-independiente
 npm install
 ```
 

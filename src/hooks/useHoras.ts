@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { type RegistroCreate, type RegistroUpdate, type RegistroHoras } from '@/types/app'
 import { mesActual } from '@/lib/utils'
 import { toast } from 'sonner'
-import { celebrarPrimeraHora, celebrarHito, randomMotivacion, triggerConfetti } from '@/components/shared/Celebrations'
+import { celebrarPrimeraHora, celebrarHito, randomMotivacion, triggerMotivacion } from '@/components/shared/Celebrations'
 
 async function fetchHoras(mes: string): Promise<RegistroHoras[]> {
   const res = await fetch(`/api/horas?mes=${mes}`)
@@ -54,7 +54,7 @@ export function useCreateHora() {
         if (Math.random() < 0.25) {
           setTimeout(() => {
             const frase = randomMotivacion()
-            triggerConfetti(frase.title, frase.subtitle)
+            triggerMotivacion(frase.title, frase.subtitle)
           }, 1200)
         }
       }

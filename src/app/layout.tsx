@@ -15,7 +15,7 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: 'Mi Empresa 🌸',
-  description: 'Gestión de horas y proyectos para freelancers',
+  description: 'Gestión de horas y proyectos para trabajadoras independientes',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
