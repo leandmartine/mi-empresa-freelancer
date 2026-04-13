@@ -1,7 +1,22 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const PROTECTED_PATHS = ['/dashboard', '/horas', '/metricas', '/empresas', '/proyectos', '/configuracion']
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  const isDev = process.env.NODE_ENV === 'development'
+
+  // Dev bypass: si tiene el cookie de prueba, dejar pasar
+  if (isDev && request.cookies.get('dev-auth')?.value === 'true') {
+    if (pathname === '/login') {
+      const dashboardUrl = request.nextUrl.clone()
+      dashboardUrl.pathname = '/dashboard'
+      return NextResponse.redirect(dashboardUrl)
+    }
+    return NextResponse.next({ request })
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -29,15 +44,10 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { pathname } = request.nextUrl
+  const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p))
 
   // Rutas protegidas: redirigir a login si no hay sesión
-  if (!user && pathname.startsWith('/dashboard') ||
-      !user && pathname.startsWith('/horas') ||
-      !user && pathname.startsWith('/metricas') ||
-      !user && pathname.startsWith('/empresas') ||
-      !user && pathname.startsWith('/proyectos') ||
-      !user && pathname.startsWith('/configuracion')) {
+  if (!user && isProtected) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
     return NextResponse.redirect(loginUrl)

@@ -18,7 +18,7 @@ export function DailyNote() {
     queryFn: async () => {
       const res = await fetch(`/api/notas?fecha=${fecha}`)
       const json = await res.json()
-      return json.data
+      return json.data ?? null
     },
   })
 

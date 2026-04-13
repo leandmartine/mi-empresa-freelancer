@@ -18,7 +18,7 @@ function SyncStatus() {
     queryFn: async () => {
       const res = await fetch('/api/sync/sheets')
       const json = await res.json()
-      return json.data
+      return json.data ?? null
     },
     refetchInterval: 30000,
   })

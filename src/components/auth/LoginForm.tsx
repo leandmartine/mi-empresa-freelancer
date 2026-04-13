@@ -26,6 +26,19 @@ export function LoginForm() {
     setLoading(true)
     setError('')
 
+    // Dev bypass: cuenta de prueba hardcodeada
+    if (
+      process.env.NODE_ENV === 'development' &&
+      email === 'mikagonz@gmail.com' &&
+      password === '12345678'
+    ) {
+      document.cookie = 'dev-auth=true; path=/; max-age=86400'
+      toast.success('¡Bienvenida Mika! 🌸')
+      router.push('/dashboard')
+      router.refresh()
+      return
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {

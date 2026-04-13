@@ -8,7 +8,7 @@ async function fetchEmpresas(): Promise<Empresa[]> {
   const res = await fetch('/api/empresas')
   const json = await res.json()
   if (!res.ok) throw new Error(json.error)
-  return json.data
+  return json.data ?? null
 }
 
 export function useEmpresas() {

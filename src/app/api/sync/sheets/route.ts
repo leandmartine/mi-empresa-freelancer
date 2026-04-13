@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { isDevAuth } from '@/lib/supabase/auth-dev'
 import { syncToGoogleSheets } from '@/lib/google-sheets/sync'
 import { mesActual, rangoMes } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
+  if (isDevAuth(req)) {
+    return NextResponse.json({ success: true, records_synced: 0, message: 'Sync deshabilitado en modo dev' })
+  }
+
   const supabase = await getSupabaseServer()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
@@ -65,7 +70,11 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ success: true, records_synced: result.records_synced })
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (isDevAuth(req)) {
+    return NextResponse.json({ data: { last_sync: null, status: 'never', records_synced: 0, error_message: null } })
+  }
+
   const supabase = await getSupabaseServer()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })

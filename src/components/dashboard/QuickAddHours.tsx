@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,6 +28,9 @@ type FormData = z.infer<typeof schema>
 
 export function QuickAddHours() {
   const [open, setOpen] = useState(false)
+  const [editingHoras, setEditingHoras] = useState(false)
+  const [horasInput, setHorasInput] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
   const { data: empresas = [] } = useEmpresas()
   const [selectedEmpresa, setSelectedEmpresa] = useState<string>('')
   const { data: proyectos = [] } = useProyectos(selectedEmpresa || undefined)
@@ -43,6 +46,27 @@ export function QuickAddHours() {
   function adjustHoras(delta: number) {
     const newVal = Math.max(0.5, Math.min(24, (horas ?? 1) + delta))
     setValue('horas', Math.round(newVal * 2) / 2)
+  }
+
+  function startEditing() {
+    setHorasInput(String(horas ?? 1))
+    setEditingHoras(true)
+    setTimeout(() => {
+      inputRef.current?.select()
+    }, 50)
+  }
+
+  function commitEdit() {
+    const parsed = parseFloat(horasInput.replace(',', '.'))
+    if (!isNaN(parsed) && parsed > 0 && parsed <= 24) {
+      setValue('horas', Math.round(parsed * 2) / 2)
+    }
+    setEditingHoras(false)
+  }
+
+  function handleInputKey(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') commitEdit()
+    if (e.key === 'Escape') setEditingHoras(false)
   }
 
   async function onSubmit(data: FormData) {
@@ -123,15 +147,48 @@ export function QuickAddHours() {
                           <Minus className="w-5 h-5" />
                         </motion.button>
 
-                        <motion.div
-                          key={horas}
-                          initial={{ scale: 0.8 }}
-                          animate={{ scale: 1 }}
-                          className="text-5xl font-bold text-pink-600 min-w-[80px]"
-                        >
-                          {horas}
-                          <span className="text-xl font-normal text-pink-400">h</span>
-                        </motion.div>
+                        <AnimatePresence mode="wait">
+                          {editingHoras ? (
+                            <motion.div
+                              key="input"
+                              initial={{ scale: 0.9, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0.9, opacity: 0 }}
+                              className="flex items-baseline gap-1 min-w-[80px] justify-center"
+                            >
+                              <input
+                                ref={inputRef}
+                                type="number"
+                                min="0.5"
+                                max="24"
+                                step="0.5"
+                                value={horasInput}
+                                onChange={(e) => setHorasInput(e.target.value)}
+                                onBlur={commitEdit}
+                                onKeyDown={handleInputKey}
+                                className="w-24 text-5xl font-bold text-pink-600 bg-transparent border-b-2 border-pink-400 text-center focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              />
+                              <span className="text-xl font-normal text-pink-400">h</span>
+                            </motion.div>
+                          ) : (
+                            <motion.button
+                              key="display"
+                              type="button"
+                              initial={{ scale: 0.8 }}
+                              animate={{ scale: 1 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={startEditing}
+                              title="Tocá para editar"
+                              className="flex items-baseline gap-1 min-w-[80px] justify-center cursor-text group"
+                            >
+                              <span className="text-5xl font-bold text-pink-600 group-hover:text-pink-500 transition-colors">
+                                {horas}
+                              </span>
+                              <span className="text-xl font-normal text-pink-400">h</span>
+                            </motion.button>
+                          )}
+                        </AnimatePresence>
 
                         <motion.button
                           type="button"

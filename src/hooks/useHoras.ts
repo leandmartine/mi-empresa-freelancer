@@ -9,7 +9,7 @@ async function fetchHoras(mes: string): Promise<RegistroHoras[]> {
   const res = await fetch(`/api/horas?mes=${mes}`)
   const json = await res.json()
   if (!res.ok) throw new Error(json.error)
-  return json.data
+  return json.data ?? null
 }
 
 export function useHoras(mes: string = mesActual()) {

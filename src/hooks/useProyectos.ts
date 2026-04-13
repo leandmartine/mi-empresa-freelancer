@@ -9,7 +9,7 @@ async function fetchProyectos(empresa_id?: string): Promise<Proyecto[]> {
   const res = await fetch(url)
   const json = await res.json()
   if (!res.ok) throw new Error(json.error)
-  return json.data
+  return json.data ?? null
 }
 
 export function useProyectos(empresa_id?: string) {

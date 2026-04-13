@@ -8,7 +8,7 @@ async function fetchMetricas(mes: string): Promise<MetricasMensuales> {
   const res = await fetch(`/api/metricas?mes=${mes}`)
   const json = await res.json()
   if (!res.ok) throw new Error(json.error)
-  return json.data
+  return json.data ?? null
 }
 
 export function useMetricas(mes: string = mesActual()) {
