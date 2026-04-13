@@ -11,7 +11,7 @@ export function DailyNote() {
   const fecha = hoy()
   const [texto, setTexto] = useState('')
   const [saved, setSaved] = useState(false)
-  const saveTimer = useRef<ReturnType<typeof setTimeout>>()
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   const { data } = useQuery({
     queryKey: ['nota', fecha],

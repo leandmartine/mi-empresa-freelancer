@@ -84,7 +84,7 @@ export default function ConfiguracionPage() {
       .select('sheets_spreadsheet_id, full_name')
       .eq('id', user.id)
       .single()
-      .then(({ data }) => {
+      .then(({ data }: { data: { sheets_spreadsheet_id?: string | null; full_name?: string | null } | null }) => {
         if (data?.sheets_spreadsheet_id) setSpreadsheetId(data.sheets_spreadsheet_id)
         if (data?.full_name) setFullName(data.full_name)
       })

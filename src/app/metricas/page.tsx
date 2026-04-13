@@ -111,7 +111,7 @@ export default function MetricasPage() {
                     />
                     <YAxis tick={{ fontSize: 11, fill: '#f9a8d4' }} />
                     <Tooltip
-                      formatter={(v: number) => [formatHoras(v), 'Horas']}
+                      formatter={(v) => [formatHoras(Number(v)), 'Horas']}
                       labelFormatter={(l) => format(parseISO(l as string), "d 'de' MMMM", { locale: es })}
                       contentStyle={{ borderRadius: '12px', border: '1px solid #fbcfe8', fontSize: 12 }}
                     />
