@@ -45,9 +45,14 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    // Si Supabase falla, dejar pasar la request
+    return NextResponse.next({ request })
+  }
 
   const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p))
 
