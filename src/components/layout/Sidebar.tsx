@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   LayoutDashboard, Clock, BarChart2, Building2,
-  Settings, LogOut, Sparkles, FolderOpen
+  Settings, LogOut, Sparkles, FolderOpen, LayoutGrid,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getSupabaseClient } from '@/lib/supabase/client'
@@ -79,8 +79,18 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Logout */}
-      <div className="p-4 border-t border-pink-50">
+      {/* Selector de proyectos + Logout */}
+      <div className="p-4 border-t border-pink-50 space-y-1">
+        <Link href="/">
+          <motion.div
+            whileHover={{ x: 3 }}
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-50 hover:text-pink-500 transition-all"
+          >
+            <LayoutGrid className="w-4 h-4" />
+            Mis proyectos
+          </motion.div>
+        </Link>
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium text-pink-300 hover:bg-rose-50 hover:text-rose-500 transition-all"

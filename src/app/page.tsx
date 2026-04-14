@@ -183,14 +183,6 @@ export default function HubPage() {
         ))}
       </div>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="text-neutral-300 text-xs mt-10 z-10"
-      >
-        Pasá el cursor por encima para ver una preview 👆
-      </motion.p>
     </div>
   )
 }
