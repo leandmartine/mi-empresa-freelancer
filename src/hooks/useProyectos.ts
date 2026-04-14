@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Proyecto, type ProyectoCreate } from '@/types/app'
 import { toast } from 'sonner'
+import { soundCreado, soundGuardado, soundEliminado } from '@/lib/sounds'
 
 async function fetchProyectos(empresa_id?: string): Promise<Proyecto[]> {
   const url = empresa_id ? `/api/proyectos?empresa_id=${empresa_id}` : '/api/proyectos'
@@ -35,6 +36,7 @@ export function useCreateProyecto() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['proyectos'] })
+      soundCreado()
       toast.success('Proyecto creado 📁')
     },
     onError: (err: Error) => toast.error(err.message),
@@ -56,6 +58,7 @@ export function useUpdateProyecto() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['proyectos'] })
+      soundGuardado()
       toast.success('Proyecto actualizado ✨')
     },
     onError: (err: Error) => toast.error(err.message),
@@ -72,6 +75,7 @@ export function useDeleteProyecto() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['proyectos'] })
+      soundEliminado()
       toast.success('Proyecto eliminado')
     },
     onError: (err: Error) => toast.error(err.message),

@@ -5,6 +5,7 @@ import { type RegistroCreate, type RegistroUpdate, type RegistroHoras } from '@/
 import { mesActual } from '@/lib/utils'
 import { toast } from 'sonner'
 import { celebrarPrimeraHora, celebrarHito, randomMotivacion, triggerMotivacion } from '@/components/shared/Celebrations'
+import { soundHorasOk, soundGuardado, soundEliminado, soundCelebracion } from '@/lib/sounds'
 
 async function fetchHoras(mes: string): Promise<RegistroHoras[]> {
   const res = await fetch(`/api/horas?mes=${mes}`)
@@ -45,8 +46,10 @@ export function useCreateHora() {
 
       if (count === 1) {
         // Primera hora de la cuenta (real, no mock)
+        soundCelebracion()
         celebrarPrimeraHora()
       } else {
+        soundHorasOk()
         // Verificar hitos de horas
         celebrarHito(Math.round(total))
 
@@ -81,6 +84,7 @@ export function useUpdateHora() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['horas'] })
       qc.invalidateQueries({ queryKey: ['metricas'] })
+      soundGuardado()
       toast.success('Actualizado ✨')
     },
     onError: (err: Error) => toast.error(err.message),
@@ -98,6 +102,7 @@ export function useDeleteHora() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['horas'] })
       qc.invalidateQueries({ queryKey: ['metricas'] })
+      soundEliminado()
       toast.success('Eliminado')
     },
     onError: (err: Error) => toast.error(err.message),

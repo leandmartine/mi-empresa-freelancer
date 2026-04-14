@@ -2,10 +2,12 @@
 
 import { useEffect, useCallback } from 'react'
 import { triggerConfetti } from './Celebrations'
+import { soundEasterEgg } from '@/lib/sounds'
 
 // Easter egg: long press 800ms en cualquier elemento con data-easter-egg
 export function EasterEgg() {
   const trigger = useCallback(() => {
+    soundEasterEgg()
     triggerConfetti('¡Encontraste un secreto! 🌸', 'Sos una crack 💖')
   }, [])
 

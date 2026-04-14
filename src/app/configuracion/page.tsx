@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { formatFechaCompleta } from '@/lib/utils'
+import { soundGuardado } from '@/lib/sounds'
 
 function SyncStatus() {
   const { data, isLoading } = useQuery({
@@ -98,7 +99,7 @@ export default function ConfiguracionPage() {
       .upsert({ id: user.id, sheets_spreadsheet_id: spreadsheetId.trim(), full_name: fullName })
     setSaving(false)
     if (error) toast.error(error.message)
-    else toast.success('Configuración guardada 🌸')
+    else { soundGuardado(); toast.success('Configuración guardada 🌸') }
   }
 
   async function handleLogout() {

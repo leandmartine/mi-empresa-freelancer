@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Empresa, type EmpresaCreate } from '@/types/app'
 import { toast } from 'sonner'
+import { soundCreado, soundGuardado, soundEliminado } from '@/lib/sounds'
 
 async function fetchEmpresas(): Promise<Empresa[]> {
   const res = await fetch('/api/empresas')
@@ -34,6 +35,7 @@ export function useCreateEmpresa() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['empresas'] })
+      soundCreado()
       toast.success('Empresa agregada 🏢')
     },
     onError: (err: Error) => toast.error(err.message),
@@ -55,6 +57,7 @@ export function useUpdateEmpresa() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['empresas'] })
+      soundGuardado()
       toast.success('Empresa actualizada ✨')
     },
     onError: (err: Error) => toast.error(err.message),
@@ -71,6 +74,7 @@ export function useDeleteEmpresa() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['empresas'] })
+      soundEliminado()
       toast.success('Empresa eliminada')
     },
     onError: (err: Error) => toast.error(err.message),

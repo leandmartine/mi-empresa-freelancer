@@ -9,6 +9,7 @@ import { Eye, EyeOff, Loader2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { soundBienvenida } from '@/lib/sounds'
 
 export function LoginForm() {
   const router = useRouter()
@@ -33,6 +34,7 @@ export function LoginForm() {
       password === '12345678'
     ) {
       document.cookie = 'dev-auth=true; path=/; max-age=86400'
+      soundBienvenida()
       toast.success('¡Bienvenida Mika! 🌸')
       router.push('/dashboard')
       router.refresh()
@@ -48,6 +50,7 @@ export function LoginForm() {
       return
     }
 
+    soundBienvenida()
     toast.success('¡Bienvenida! 🌸')
     router.push('/dashboard')
     router.refresh()

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { hoy } from '@/lib/utils'
+import { soundNota } from '@/lib/sounds'
 import { Pencil, Check } from 'lucide-react'
 
 export function DailyNote() {
@@ -39,6 +40,7 @@ export function DailyNote() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['nota', fecha] })
+      soundNota()
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
     },

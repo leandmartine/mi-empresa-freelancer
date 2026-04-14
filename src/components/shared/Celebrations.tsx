@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { soundCelebracion } from '@/lib/sounds'
 
 const EMOJIS = ['🌸', '🌷', '💐', '🌺', '✨', '🦋', '🎀', '💖', '💝', '🌹', '⭐', '🎉']
 
@@ -73,6 +74,7 @@ export function CelebrationProvider() {
 
   // Celebración completa: confetti + toast centrado
   const showCelebration = useCallback((title: string, subtitle: string) => {
+    soundCelebracion()
     const id = Date.now()
     const pieces = Array.from({ length: 28 }, (_, i) => ({
       id: i,
