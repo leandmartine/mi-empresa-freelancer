@@ -73,13 +73,13 @@ function SyncStatus() {
 
 export default function ConfiguracionPage() {
   const { user } = useAuth()
-  const supabase = getSupabaseClient()
   const [spreadsheetId, setSpreadsheetId] = useState('')
   const [saving, setSaving] = useState(false)
   const [fullName, setFullName] = useState('')
 
   useEffect(() => {
     if (!user) return
+    const supabase = getSupabaseClient()
     supabase
       .from('profiles')
       .select('sheets_spreadsheet_id, full_name')
@@ -89,12 +89,12 @@ export default function ConfiguracionPage() {
         if (data?.sheets_spreadsheet_id) setSpreadsheetId(data.sheets_spreadsheet_id)
         if (data?.full_name) setFullName(data.full_name)
       })
-  }, [user, supabase])
+  }, [user])
 
   async function saveSpreadsheet() {
     if (!user) return
     setSaving(true)
-    const { error } = await supabase
+    const { error } = await getSupabaseClient()
       .from('profiles')
       .upsert({ id: user.id, sheets_spreadsheet_id: spreadsheetId.trim(), full_name: fullName })
     setSaving(false)
@@ -103,7 +103,7 @@ export default function ConfiguracionPage() {
   }
 
   async function handleLogout() {
-    await supabase.auth.signOut()
+    await getSupabaseClient().auth.signOut()
     window.location.href = '/login'
   }
 

@@ -13,8 +13,6 @@ import { soundBienvenida } from '@/lib/sounds'
 
 export function LoginForm() {
   const router = useRouter()
-  const supabase = getSupabaseClient()
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -41,7 +39,7 @@ export function LoginForm() {
       return
     }
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await getSupabaseClient().auth.signInWithPassword({ email, password })
 
     if (error) {
       setError('Email o contraseña incorrectos 💔')
