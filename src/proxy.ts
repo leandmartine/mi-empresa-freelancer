@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 const PROTECTED_PATHS = ['/dashboard', '/horas', '/metricas', '/empresas', '/proyectos', '/configuracion']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isDev = process.env.NODE_ENV === 'development'
 
