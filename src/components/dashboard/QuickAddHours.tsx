@@ -15,6 +15,7 @@ import { useCreateHora } from '@/hooks/useHoras'
 import { useEmpresas } from '@/hooks/useEmpresas'
 import { useProyectos } from '@/hooks/useProyectos'
 import { hoy, cn } from '@/lib/utils'
+import { haptic } from '@/lib/sounds'
 
 const schema = z.object({
   fecha: z.string(),
@@ -75,6 +76,7 @@ export function QuickAddHours() {
       empresa_id: data.empresa_id || null,
       proyecto_id: data.proyecto_id || null,
     })
+    haptic('medium')
     reset({ fecha: hoy(), horas: 1 })
     setSelectedEmpresa('')
     setOpen(false)

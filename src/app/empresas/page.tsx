@@ -18,13 +18,20 @@ export default function EmpresasPage() {
   const [nombre, setNombre] = useState('')
   const [color, setColor] = useState(COLORES_SUGERIDOS[0])
   const [rut, setRut] = useState('')
+  const [tarifa, setTarifa] = useState('')
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
     if (!nombre.trim()) return
-    await createEmpresa.mutateAsync({ nombre, color, rut_empresa: rut || undefined })
+    await createEmpresa.mutateAsync({
+      nombre,
+      color,
+      rut_empresa: rut || undefined,
+      tarifa_por_hora: tarifa ? parseFloat(tarifa) : undefined,
+    })
     setNombre('')
     setRut('')
+    setTarifa('')
     setColor(COLORES_SUGERIDOS[0])
     setShowForm(false)
   }
@@ -71,6 +78,19 @@ export default function EmpresasPage() {
                     value={rut}
                     onChange={(e) => setRut(e.target.value)}
                     placeholder="12.345.678-9"
+                    className="mt-1 border-pink-200 rounded-xl bg-pink-50/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-pink-700">Tarifa/hora (opcional)</label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={tarifa}
+                    onChange={(e) => setTarifa(e.target.value)}
+                    placeholder="Tarifa/hora (opcional)"
                     className="mt-1 border-pink-200 rounded-xl bg-pink-50/50"
                   />
                 </div>
@@ -151,6 +171,9 @@ export default function EmpresasPage() {
                     <p className="font-semibold text-pink-800">{empresa.nombre}</p>
                     {empresa.rut_empresa && (
                       <p className="text-xs text-pink-400 mt-0.5">RUT: {empresa.rut_empresa}</p>
+                    )}
+                    {empresa.tarifa_por_hora != null && empresa.tarifa_por_hora > 0 && (
+                      <p className="text-xs text-pink-400 mt-0.5">${empresa.tarifa_por_hora}/h</p>
                     )}
                   </div>
 

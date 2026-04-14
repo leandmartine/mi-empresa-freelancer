@@ -1,97 +1,65 @@
-# 📋 Pendientes — Mi Empresa
+# Pendientes — Mi Empresa
 
-## 🔴 Configuraciones manuales (OBLIGATORIAS para que funcione)
+## Configuraciones manuales
 
-### 1. Crear proyecto en Supabase
-- [ ] Ir a https://supabase.com y crear cuenta (gratis)
-- [ ] Crear nuevo proyecto (elegir región más cercana: São Paulo o US East)
-- [ ] Copiar las claves API: `Project URL`, `anon key`, `service_role key`
-- [ ] Ejecutar el SQL de `supabase/schema.sql` en el SQL Editor de Supabase
-- [ ] En Authentication → Providers → Email: habilitar "Email signups"
-- [ ] Crear el usuario manualmente en Authentication → Users → Add user
-  - Email: el email de tu novia
-  - Password: la contraseña que ella quiera
-- [ ] Pegar las claves en `.env.local`
+### 1. Supabase ✅
+- [x] Proyecto creado → `ozwciusfikwtauqebzjd`
+- [x] Schema ejecutado (`supabase/schema.sql`)
+- [ ] Ejecutar `supabase/migration_tarifa.sql` en el SQL Editor ← PENDIENTE
+- [x] Usuario creado en Authentication > Users
 
-### 2. Deploy en Vercel
-- [ ] Crear cuenta en https://vercel.com (gratis, con GitHub)
-- [ ] Importar el repositorio desde GitHub
-- [ ] Agregar las variables de entorno en Vercel:
-  - `NEXT_PUBLIC_SUPABASE_URL`
-  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-  - `SUPABASE_SERVICE_ROLE_KEY`
-  - `NEXT_PUBLIC_APP_URL` → poner la URL que te da Vercel después del primer deploy
-- [ ] Hacer el primer deploy (botón "Deploy" en Vercel)
-- [ ] La URL será algo como `https://mi-empresa-xxxx.vercel.app`
+### 2. Vercel ✅
+- [x] Proyecto importado
+- [x] Variables de entorno configuradas
+- [x] `NEXT_PUBLIC_APP_URL=https://mikagonz.site`
+- [x] `NEXT_PUBLIC_BYMIK_URL=https://bymik.mikagonz.site`
+- [x] Google OAuth configurado
 
-### 3. Configurar Google Sheets (opcional pero recomendado)
-- [ ] Ir a https://console.cloud.google.com
-- [ ] Crear proyecto nuevo → habilitar "Google Sheets API"
-- [ ] Crear credenciales tipo "OAuth 2.0 Client ID" (tipo Web Application)
-- [ ] Agregar como "Authorized redirect URI": `https://TU_APP.vercel.app/api/sync/sheets/connect`
-- [ ] Copiar Client ID y Client Secret al `.env.local` y a Vercel
-- [ ] Actualizar `GOOGLE_REDIRECT_URI` en Vercel con la URL real
-
----
-
-## 🟡 Pendientes de desarrollo (próximas iteraciones)
-
-### MVP — Por completar
-- [ ] Verificar que el build pasa sin errores (`npm run build`)
-- [ ] Probar el flujo completo: login → agregar horas → ver métricas
-- [ ] Testear en mobile (Chrome DevTools → iPhone SE y iPhone 14)
-- [ ] Configurar el safe-area para los bordes en iPhone (bottom-safe)
-- [ ] Agregar el auth callback route para Supabase (`/api/auth/callback`)
-
-### UX / Diseño
-- [ ] Agregar animación de entrada a la página (page transitions con Framer Motion)
-- [ ] Mejorar el empty state del dashboard cuando no hay datos
-- [ ] Agregar feedback háptico en mobile (navigator.vibrate)
-- [ ] Cursor personalizado con 🌸 en desktop (solo si le gusta)
-- [ ] Agregar un tercer easter egg sorpresa
-
-### Features
-- [ ] Edición de registros de horas (actualmente solo se pueden eliminar)
-- [ ] Filtrar horas por empresa/proyecto en la vista de horas
-- [ ] Vista de horas de meses anteriores en el dashboard
-- [ ] Exportar mes a PDF
-- [ ] Agregar campo "tarifa por hora" a empresas para calcular ingresos
-- [ ] Resumen de ingresos estimados en métricas
-
-### Perfil (cuando tenga los datos)
-- [ ] Campo RUT personal
-- [ ] Campo nombre de empresa propia
-- [ ] Campo dirección
-- [ ] Foto de perfil
-
-### Facturación (futuro, cuando tenga RUT)
-- [ ] Investigar API del SII (Chile) para facturación electrónica
-- [ ] Template de boleta/factura en PDF con react-pdf
-- [ ] Historial de facturas emitidas
-
-### Técnico
-- [ ] Agregar manejo de errores global con Error Boundary
-- [ ] PWA: agregar `manifest.json` y service worker para instalar en celular
-- [ ] Caché offline básico con Service Worker
-- [ ] Rate limiting en las API routes
-- [ ] Tests básicos con Jest + Testing Library
+### 3. Google Sheets ✅
+- [x] OAuth 2.0 configurado
+- [x] Redirect URI en producción
 
 ---
 
 ## ✅ Completado
 
-- [x] Estructura base del proyecto (Next.js 14 + TypeScript)
+### Base
+- [x] Estructura base del proyecto (Next.js + TypeScript)
 - [x] Sistema de diseño (Tailwind CSS, colores rosas)
-- [x] Autenticación con Supabase (login, logout, middleware)
+- [x] Autenticación con Supabase
 - [x] Schema de base de datos completo con RLS
-- [x] CRUD de empresas
+- [x] CRUD de empresas (con tarifa por hora)
 - [x] CRUD de proyectos
-- [x] Registro de horas (crear, eliminar, listar)
+- [x] Registro de horas (crear, editar, eliminar)
+- [x] Filtrar horas por empresa/proyecto
 - [x] Notas diarias con autosave
-- [x] Métricas mensuales con gráficos (Recharts)
+- [x] Métricas mensuales con gráficos e ingresos estimados
+- [x] Integración con Google Sheets
+- [x] Página de configuración (perfil completo: RUT, empresa, dirección, avatar)
+
+### UX / Técnico
 - [x] Navegación responsive (sidebar desktop, bottom nav mobile)
-- [x] Easter eggs (Konami code + triple tap)
-- [x] Integración base con Google Sheets
-- [x] Página de configuración
-- [x] PROYECTO.md con documentación completa
-- [x] Repositorio en GitHub
+- [x] Safe-area para iPhone
+- [x] Animaciones de transición de páginas (Framer Motion)
+- [x] Feedback háptico en mobile
+- [x] Cursor personalizado 🌸 en desktop
+- [x] Empty state mejorado en dashboard
+- [x] Easter eggs (Konami code + triple tap + 7-taps secreto)
+- [x] Auth callback route para Supabase
+- [x] Error Boundary global
+- [x] PWA instalable (manifest + iconos)
+
+### Features
+- [x] Vista de horas por mes (navegación prev/next en dashboard y horas)
+- [x] Exportar mes a PDF (vista de impresión)
+- [x] Ingresos estimados en métricas (horas × tarifa)
+- [x] Perfil completo: RUT, nombre empresa propia, dirección, foto
+
+## 🔲 Futuro
+- [ ] Exportar métricas a PDF
+- [ ] Tarifa por hora por proyecto (actualmente solo por empresa)
+- [ ] Historial de facturas emitidas
+- [ ] API del SII para facturación electrónica
+- [ ] Rate limiting en API routes
+- [ ] Tests básicos
+- [ ] Caché offline con Service Worker

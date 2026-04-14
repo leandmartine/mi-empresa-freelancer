@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { nombre, color, rut_empresa } = body
+  const { nombre, color, rut_empresa, tarifa_por_hora } = body
 
   if (!nombre?.trim()) return NextResponse.json({ error: 'El nombre es requerido' }, { status: 400 })
 
@@ -36,7 +36,13 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await supabase
     .from('empresas')
-    .insert({ user_id: user.id, nombre: nombre.trim(), color: color ?? '#f472b6', rut_empresa: rut_empresa || null })
+    .insert({
+      user_id: user.id,
+      nombre: nombre.trim(),
+      color: color ?? '#f472b6',
+      rut_empresa: rut_empresa || null,
+      tarifa_por_hora: tarifa_por_hora ?? null,
+    })
     .select().single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

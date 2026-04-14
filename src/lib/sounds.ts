@@ -100,3 +100,12 @@ export function soundEasterEgg() {
 export function soundNota() {
   playTone([880], { type: 'sine', duration: 0.07, gain: 0.07, fadeOut: 0.04 })
 }
+
+// ─── Háptico ──────────────────────────────────────────────────────────────────
+
+export function haptic(type: 'light' | 'medium' | 'heavy' = 'light') {
+  if ('vibrate' in navigator) {
+    const patterns = { light: [10], medium: [20], heavy: [30, 10, 30] }
+    navigator.vibrate(patterns[type])
+  }
+}

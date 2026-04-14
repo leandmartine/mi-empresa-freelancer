@@ -5,6 +5,8 @@ export interface UserProfile {
   rut: string | null
   email: string
   avatar_url: string | null
+  nombre_empresa_propia: string | null
+  direccion: string | null
   sheets_spreadsheet_id: string | null
   created_at: string
   updated_at: string
@@ -17,11 +19,12 @@ export interface Empresa {
   nombre: string
   color: string
   rut_empresa: string | null
+  tarifa_por_hora?: number | null
   activa: boolean
   created_at: string
 }
 
-export type EmpresaCreate = Pick<Empresa, 'nombre' | 'color'> & { rut_empresa?: string }
+export type EmpresaCreate = Pick<Empresa, 'nombre' | 'color'> & { rut_empresa?: string; tarifa_por_hora?: number }
 export type EmpresaUpdate = Partial<EmpresaCreate> & { activa?: boolean }
 
 // ─── Proyecto ─────────────────────────────────────────────────────────────────
@@ -89,6 +92,7 @@ export interface MetricasMensuales {
     empresa_nombre: string
     empresa_color: string
     total_horas: number
+    ingresos_estimados?: number
   }>
   por_proyecto: Array<{
     proyecto_id: string

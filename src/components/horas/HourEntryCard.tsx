@@ -8,6 +8,7 @@ import { formatFecha, formatHoras } from '@/lib/utils'
 import { useDeleteHora, useUpdateHora } from '@/hooks/useHoras'
 import { useEmpresas } from '@/hooks/useEmpresas'
 import { useProyectos } from '@/hooks/useProyectos'
+import { haptic } from '@/lib/sounds'
 
 interface Props {
   registro: RegistroHoras
@@ -22,6 +23,7 @@ export function HourEntryCard({ registro }: Props) {
   const [descripcion, setDescripcion] = useState(registro.descripcion ?? '')
   const [empresaId, setEmpresaId] = useState(registro.empresa_id ?? '')
   const [proyectoId, setProyectoId] = useState(registro.proyecto_id ?? '')
+  const [fecha, setFecha] = useState(registro.fecha)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const deleteHora = useDeleteHora()
@@ -31,6 +33,7 @@ export function HourEntryCard({ registro }: Props) {
 
   async function handleDelete() {
     if (!confirmDelete) {
+      haptic('light')
       setConfirmDelete(true)
       setTimeout(() => setConfirmDelete(false), 3000)
       return
@@ -43,6 +46,7 @@ export function HourEntryCard({ registro }: Props) {
     setDescripcion(registro.descripcion ?? '')
     setEmpresaId(registro.empresa_id ?? '')
     setProyectoId(registro.proyecto_id ?? '')
+    setFecha(registro.fecha)
     setEditing(true)
   }
 
@@ -55,6 +59,7 @@ export function HourEntryCard({ registro }: Props) {
     await updateHora.mutateAsync({
       id: registro.id,
       horas,
+      fecha,
       descripcion: descripcion || null,
       empresa_id: empresaId || null,
       proyecto_id: proyectoId || null,
@@ -222,6 +227,14 @@ export function HourEntryCard({ registro }: Props) {
                 <Plus className="w-4 h-4" />
               </motion.button>
             </div>
+
+            {/* Fecha */}
+            <input
+              type="date"
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
+              className="w-full text-sm border border-pink-200 rounded-xl px-3 py-2 bg-white text-pink-800 focus:outline-none focus:border-pink-400"
+            />
 
             {/* Empresa */}
             <select

@@ -153,9 +153,39 @@ export default function MetricasPage() {
                             style={{ background: e.empresa_color }}
                           />
                         </div>
+                        {(e.ingresos_estimados ?? 0) > 0 && (
+                          <p className="text-xs text-pink-400 mt-1">
+                            Ingresos estimados: <span className="font-semibold text-pink-600">${e.ingresos_estimados!.toLocaleString('es-CL')}</span>
+                          </p>
+                        )}
                       </div>
                     )
                   })}
+                </div>
+              </div>
+            )}
+
+            {/* Ingresos estimados totales */}
+            {metricas.por_empresa.some((e) => (e.ingresos_estimados ?? 0) > 0) && (
+              <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl border border-pink-100 p-4 shadow-sm">
+                <h3 className="text-sm font-semibold text-pink-700 mb-2">Ingresos estimados</h3>
+                <div className="space-y-1">
+                  {metricas.por_empresa
+                    .filter((e) => (e.ingresos_estimados ?? 0) > 0)
+                    .map((e) => (
+                      <div key={e.empresa_id} className="flex items-center justify-between">
+                        <span className="text-sm text-pink-700">{e.empresa_nombre}</span>
+                        <span className="text-sm font-bold text-pink-600">
+                          ${e.ingresos_estimados!.toLocaleString('es-CL')}
+                        </span>
+                      </div>
+                    ))}
+                  <div className="flex items-center justify-between border-t border-pink-200 pt-2 mt-2">
+                    <span className="text-sm font-bold text-pink-800">Total estimado</span>
+                    <span className="text-sm font-bold text-rose-600">
+                      ${metricas.por_empresa.reduce((acc, e) => acc + (e.ingresos_estimados ?? 0), 0).toLocaleString('es-CL')}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}

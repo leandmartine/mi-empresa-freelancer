@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { useRef } from 'react'
 import {
   LayoutDashboard, Clock, BarChart2, Building2,
   Settings, LogOut, Sparkles, FolderOpen, LayoutGrid,
@@ -10,6 +11,8 @@ import {
 import { cn } from '@/lib/utils'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { triggerConfetti } from '@/components/shared/Celebrations'
+import { soundEasterEgg } from '@/lib/sounds'
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -23,6 +26,22 @@ const NAV_ITEMS = [
 export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const tapCountRef = useRef(0)
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function handleVersionTap() {
+    tapCountRef.current += 1
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current)
+    tapTimerRef.current = setTimeout(() => {
+      tapCountRef.current = 0
+    }, 3000)
+    if (tapCountRef.current >= 7) {
+      tapCountRef.current = 0
+      soundEasterEgg()
+      triggerConfetti('¡Encontraste el secreto! 🎉', 'Sos increíble 💖')
+    }
+  }
+
   async function handleLogout() {
     const supabase = getSupabaseClient()
     await supabase.auth.signOut()
@@ -96,6 +115,12 @@ export function Sidebar() {
         >
           <LogOut className="w-4 h-4" />
           Salir
+        </button>
+        <button
+          onClick={handleVersionTap}
+          className="w-full text-center text-[10px] text-pink-200 hover:text-pink-300 transition-colors py-1 select-none"
+        >
+          v1.0.0
         </button>
       </div>
     </aside>

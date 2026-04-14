@@ -4,7 +4,13 @@ import { isDevAuth } from '@/lib/supabase/auth-dev'
 import { devRegistros } from '@/lib/supabase/dev-store'
 import { mesActual, rangoMes } from '@/lib/utils'
 
-function calcularMetricas(registros: ReturnType<typeof devRegistros.list>, mes: string) {
+type EmpresaConTarifa = { id: string; tarifa_por_hora?: number | null }
+
+function calcularMetricas(
+  registros: ReturnType<typeof devRegistros.list>,
+  mes: string,
+  empresasConTarifa: EmpresaConTarifa[] = []
+) {
   const total_horas = registros.reduce((acc, r) => acc + r.horas, 0)
   const num_registros = registros.length
   const dias_con_trabajo = new Set(registros.map((r) => r.fecha)).size
@@ -44,12 +50,21 @@ function calcularMetricas(registros: ReturnType<typeof devRegistros.list>, mes: 
     diasMap.set(r.fecha, (diasMap.get(r.fecha) ?? 0) + r.horas)
   })
 
+  const tarifaMap = new Map(empresasConTarifa.map((e) => [e.id, e.tarifa_por_hora ?? 0]))
+
+  const porEmpresaConIngresos = Array.from(empresasMap.values())
+    .sort((a, b) => b.total_horas - a.total_horas)
+    .map((e) => ({
+      ...e,
+      ingresos_estimados: (tarifaMap.get(e.empresa_id) ?? 0) * e.total_horas,
+    }))
+
   return {
     mes,
     total_horas,
     num_registros,
     promedio_diario,
-    por_empresa: Array.from(empresasMap.values()).sort((a, b) => b.total_horas - a.total_horas),
+    por_empresa: porEmpresaConIngresos,
     por_proyecto: Array.from(proyectosMap.values()).sort((a, b) => b.total_horas - a.total_horas),
     por_dia: Array.from(diasMap.entries())
       .map(([fecha, total_horas]) => ({ fecha, total_horas }))
@@ -71,11 +86,17 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
   const { desde, hasta } = rangoMes(mes)
-  const { data: registros, error } = await supabase
-    .from('registros_horas')
-    .select(`*, empresa:empresas(id, nombre, color), proyecto:proyectos(id, nombre, color)`)
-    .eq('user_id', user.id).gte('fecha', desde).lte('fecha', hasta)
+  const [{ data: registros, error }, { data: empresas }] = await Promise.all([
+    supabase
+      .from('registros_horas')
+      .select(`*, empresa:empresas(id, nombre, color), proyecto:proyectos(id, nombre, color)`)
+      .eq('user_id', user.id).gte('fecha', desde).lte('fecha', hasta),
+    supabase
+      .from('empresas')
+      .select('id, tarifa_por_hora')
+      .eq('user_id', user.id),
+  ])
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ data: calcularMetricas(registros ?? [], mes) })
+  return NextResponse.json({ data: calcularMetricas(registros ?? [], mes, empresas ?? []) })
 }

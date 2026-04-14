@@ -76,31 +76,59 @@ export default function ConfiguracionPage() {
   const [spreadsheetId, setSpreadsheetId] = useState('')
   const [saving, setSaving] = useState(false)
   const [fullName, setFullName] = useState('')
+  const [rut, setRut] = useState('')
+  const [nombreEmpresaPropia, setNombreEmpresaPropia] = useState('')
+  const [direccion, setDireccion] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState('')
 
   useEffect(() => {
     if (!user) return
     const supabase = getSupabaseClient()
     supabase
       .from('profiles')
-      .select('sheets_spreadsheet_id, full_name')
+      .select('sheets_spreadsheet_id, full_name, rut, nombre_empresa_propia, direccion, avatar_url')
       .eq('id', user.id)
       .single()
-      .then(({ data }: { data: { sheets_spreadsheet_id?: string | null; full_name?: string | null } | null }) => {
+      .then(({ data }: {
+        data: {
+          sheets_spreadsheet_id?: string | null
+          full_name?: string | null
+          rut?: string | null
+          nombre_empresa_propia?: string | null
+          direccion?: string | null
+          avatar_url?: string | null
+        } | null
+      }) => {
         if (data?.sheets_spreadsheet_id) setSpreadsheetId(data.sheets_spreadsheet_id)
         if (data?.full_name) setFullName(data.full_name)
+        if (data?.rut) setRut(data.rut)
+        if (data?.nombre_empresa_propia) setNombreEmpresaPropia(data.nombre_empresa_propia)
+        if (data?.direccion) setDireccion(data.direccion)
+        if (data?.avatar_url) setAvatarUrl(data.avatar_url)
       })
   }, [user])
 
-  async function saveSpreadsheet() {
+  async function saveProfile() {
     if (!user) return
     setSaving(true)
     const { error } = await getSupabaseClient()
       .from('profiles')
-      .upsert({ id: user.id, sheets_spreadsheet_id: spreadsheetId.trim(), full_name: fullName })
+      .upsert({
+        id: user.id,
+        sheets_spreadsheet_id: spreadsheetId.trim(),
+        full_name: fullName,
+        rut: rut.trim() || null,
+        nombre_empresa_propia: nombreEmpresaPropia.trim() || null,
+        direccion: direccion.trim() || null,
+        avatar_url: avatarUrl.trim() || null,
+      })
     setSaving(false)
     if (error) toast.error(error.message)
     else { soundGuardado(); toast.success('Configuración guardada 🌸') }
   }
+
+  // Keep backward compat alias
+  const saveSpreadsheet = saveProfile
 
   async function handleLogout() {
     await getSupabaseClient().auth.signOut()
@@ -116,6 +144,19 @@ export default function ConfiguracionPage() {
             <User className="w-4 h-4 text-pink-400" />
             <h2 className="font-semibold text-pink-800">Mi perfil</h2>
           </div>
+
+          {/* Avatar */}
+          {avatarUrl && (
+            <div className="flex justify-center mb-4">
+              <img
+                src={avatarUrl}
+                alt="Avatar"
+                className="w-16 h-16 rounded-full object-cover border-2 border-pink-200 shadow"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+              />
+            </div>
+          )}
+
           <div className="space-y-3">
             <div>
               <label className="text-sm font-medium text-pink-700">Nombre</label>
@@ -132,6 +173,42 @@ export default function ConfiguracionPage() {
                 value={user?.email ?? ''}
                 disabled
                 className="mt-1 border-pink-100 rounded-xl bg-pink-50/30 text-pink-400"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-pink-700">RUT</label>
+              <Input
+                value={rut}
+                onChange={(e) => setRut(e.target.value)}
+                placeholder="12.345.678-9"
+                className="mt-1 border-pink-200 rounded-xl bg-pink-50/50"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-pink-700">Nombre de empresa propia</label>
+              <Input
+                value={nombreEmpresaPropia}
+                onChange={(e) => setNombreEmpresaPropia(e.target.value)}
+                placeholder="Mi empresa SPA"
+                className="mt-1 border-pink-200 rounded-xl bg-pink-50/50"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-pink-700">Dirección</label>
+              <Input
+                value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
+                placeholder="Calle 123, Ciudad"
+                className="mt-1 border-pink-200 rounded-xl bg-pink-50/50"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-pink-700">URL de foto de perfil</label>
+              <Input
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                placeholder="https://..."
+                className="mt-1 border-pink-200 rounded-xl bg-pink-50/50"
               />
             </div>
           </div>
@@ -186,17 +263,15 @@ export default function ConfiguracionPage() {
           </div>
         </div>
 
-        {/* Información */}
+        {/* Seguridad */}
         <div className="bg-white rounded-2xl border border-pink-100 p-5 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <Shield className="w-4 h-4 text-pink-400" />
-            <h2 className="font-semibold text-pink-800">Información futura</h2>
+            <h2 className="font-semibold text-pink-800">Seguridad</h2>
           </div>
-          <div className="space-y-2 text-sm text-pink-400">
-            <p>🔜 RUT personal (pendiente)</p>
-            <p>🔜 Nombre de empresa (pendiente)</p>
-            <p>🔜 Facturación electrónica (cuando tengas RUT)</p>
-          </div>
+          <p className="text-sm text-pink-400">
+            Tu cuenta está protegida con autenticación de Supabase.
+          </p>
         </div>
 
         {/* Logout */}

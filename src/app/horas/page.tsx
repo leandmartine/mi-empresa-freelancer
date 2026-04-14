@@ -6,14 +6,25 @@ import { AppLayout } from '@/app/layout-app'
 import { HourEntryCard } from '@/components/horas/HourEntryCard'
 import { QuickAddHours } from '@/components/dashboard/QuickAddHours'
 import { useHoras } from '@/hooks/useHoras'
+import { useEmpresas } from '@/hooks/useEmpresas'
+import { useProyectos } from '@/hooks/useProyectos'
 import { formatMes, mesActual, formatHoras } from '@/lib/utils'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, FileDown } from 'lucide-react'
 import { format, subMonths, addMonths, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 export default function HorasPage() {
   const [mes, setMes] = useState(mesActual())
-  const { data: registros = [], isLoading } = useHoras(mes)
+  const [filterEmpresaId, setFilterEmpresaId] = useState('')
+  const [filterProyectoId, setFilterProyectoId] = useState('')
+
+  const { data: registros = [], isLoading } = useHoras(
+    mes,
+    filterEmpresaId || undefined,
+    filterProyectoId || undefined
+  )
+  const { data: empresas = [] } = useEmpresas()
+  const { data: proyectos = [] } = useProyectos(filterEmpresaId || undefined)
 
   // Agrupar por día
   const grouped = registros.reduce((acc, r) => {
@@ -31,6 +42,10 @@ export default function HorasPage() {
   function nextMes() {
     const next = format(addMonths(parseISO(`${mes}-01`), 1), 'yyyy-MM')
     if (next <= mesActual()) setMes(next)
+  }
+
+  function handleExport() {
+    window.open(`/horas/export?mes=${mes}`, '_blank')
   }
 
   return (
@@ -51,6 +66,40 @@ export default function HorasPage() {
             className="p-2 rounded-xl hover:bg-pink-50 text-pink-400 transition-colors disabled:opacity-30"
           >
             <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Filtros */}
+        <div className="bg-white rounded-2xl border border-pink-100 p-4 shadow-sm space-y-3">
+          <p className="text-xs font-semibold text-pink-500 uppercase tracking-wide">Filtrar</p>
+          <div className="flex gap-2">
+            <select
+              value={filterEmpresaId}
+              onChange={(e) => { setFilterEmpresaId(e.target.value); setFilterProyectoId('') }}
+              className="flex-1 text-sm border border-pink-200 rounded-xl px-3 py-2 bg-pink-50/50 text-pink-800 focus:outline-none focus:border-pink-400"
+            >
+              <option value="">Todas las empresas</option>
+              {empresas.map((e) => (
+                <option key={e.id} value={e.id}>{e.nombre}</option>
+              ))}
+            </select>
+            <select
+              value={filterProyectoId}
+              onChange={(e) => setFilterProyectoId(e.target.value)}
+              className="flex-1 text-sm border border-pink-200 rounded-xl px-3 py-2 bg-pink-50/50 text-pink-800 focus:outline-none focus:border-pink-400"
+            >
+              <option value="">Todos los proyectos</option>
+              {proyectos.map((p) => (
+                <option key={p.id} value={p.id}>{p.nombre}</option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={handleExport}
+            className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-pink-200 text-pink-500 text-sm font-medium hover:bg-pink-50 transition-colors"
+          >
+            <FileDown className="w-4 h-4" />
+            Exportar PDF
           </button>
         </div>
 

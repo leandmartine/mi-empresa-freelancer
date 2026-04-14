@@ -7,17 +7,20 @@ import { toast } from 'sonner'
 import { celebrarPrimeraHora, celebrarHito, randomMotivacion, triggerMotivacion } from '@/components/shared/Celebrations'
 import { soundHorasOk, soundGuardado, soundEliminado, soundCelebracion } from '@/lib/sounds'
 
-async function fetchHoras(mes: string): Promise<RegistroHoras[]> {
-  const res = await fetch(`/api/horas?mes=${mes}`)
+async function fetchHoras(mes: string, empresa_id?: string, proyecto_id?: string): Promise<RegistroHoras[]> {
+  const params = new URLSearchParams({ mes })
+  if (empresa_id) params.set('empresa_id', empresa_id)
+  if (proyecto_id) params.set('proyecto_id', proyecto_id)
+  const res = await fetch(`/api/horas?${params.toString()}`)
   const json = await res.json()
   if (!res.ok) throw new Error(json.error)
   return json.data ?? null
 }
 
-export function useHoras(mes: string = mesActual()) {
+export function useHoras(mes: string = mesActual(), empresa_id?: string, proyecto_id?: string) {
   return useQuery({
-    queryKey: ['horas', mes],
-    queryFn: () => fetchHoras(mes),
+    queryKey: ['horas', mes, empresa_id, proyecto_id],
+    queryFn: () => fetchHoras(mes, empresa_id, proyecto_id),
     staleTime: 0,
   })
 }

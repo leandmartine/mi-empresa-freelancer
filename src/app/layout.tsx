@@ -5,6 +5,8 @@ import { QueryProvider } from '@/providers/QueryProvider'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { CelebrationProvider } from '@/components/shared/Celebrations'
 import { EasterEgg } from '@/components/shared/EasterEgg'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { CustomCursor } from '@/components/shared/CustomCursor'
 import { Toaster } from 'sonner'
 
 const geistSans = Geist({
@@ -26,6 +28,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#ec4899',
+  viewportFit: 'cover',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -42,23 +45,26 @@ export default function RootLayout({
       className={`${geistSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--background)]">
-        <AuthProvider>
-          <QueryProvider>
-            {children}
-            <CelebrationProvider />
-            <EasterEgg />
-            <Toaster
-              position="top-center"
-              toastOptions={{
-                style: {
-                  background: '#fff',
-                  border: '1px solid #fbcfe8',
-                  color: '#3f1728',
-                },
-              }}
-            />
-          </QueryProvider>
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <QueryProvider>
+              {children}
+              <CelebrationProvider />
+              <EasterEgg />
+              <CustomCursor />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  style: {
+                    background: '#fff',
+                    border: '1px solid #fbcfe8',
+                    color: '#3f1728',
+                  },
+                }}
+              />
+            </QueryProvider>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

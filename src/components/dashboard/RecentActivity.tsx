@@ -3,10 +3,13 @@
 import { motion } from 'framer-motion'
 import { useHoras } from '@/hooks/useHoras'
 import { mesActual, formatFecha, formatHoras } from '@/lib/utils'
-import { Clock, Building2 } from 'lucide-react'
 
-export function RecentActivity() {
-  const { data: registros = [], isLoading } = useHoras(mesActual())
+interface Props {
+  mes?: string
+}
+
+export function RecentActivity({ mes = mesActual() }: Props) {
+  const { data: registros = [], isLoading } = useHoras(mes)
 
   const recent = registros.slice(0, 5)
 
@@ -23,9 +26,9 @@ export function RecentActivity() {
   if (recent.length === 0) {
     return (
       <div className="text-center py-8 text-pink-300">
-        <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
-        <p className="text-sm">Aún no hay registros este mes</p>
-        <p className="text-xs mt-1">¡Agregá tus primeras horas! 🌸</p>
+        <div className="text-3xl mb-2">🌸</div>
+        <p className="text-sm">No hay actividad reciente</p>
+        <p className="text-xs mt-1">¡Agregá tus primeras horas!</p>
       </div>
     )
   }
